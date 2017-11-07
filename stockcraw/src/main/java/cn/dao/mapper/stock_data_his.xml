@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dao.StockDataHisDao">
+
+	<select id="findAllIdAndTime" resultType="cn.model.StockBasic">
+		select 
+			concat(stock_exchange-1,stock_id) as stockId,
+			case when data_update_time is null or data_update_time = '' then '19910101' else data_update_time end as dataUpdateTime 
+		from stock_basic
+	</select>
+	
+	<insert id="saveStockDataHis" parameterType="java.util.List">
+		insert into stock_data_his(st_id,st_name,st_date,st_close_price,st_max_price,st_min_price,st_open_price,st_before_price,st_fluc_price,st_fluc_rate,st_change_rate,st_trade_val,st_trade_price,st_total_val,st_circula_val)
+		values
+		<foreach collection="list" item="stockHis" index="index" separator=",">  
+				(#{stockHis.stId},
+				#{stockHis.stName},
+				#{stockHis.stDate},
+				#{stockHis.stClosePrice},
+				#{stockHis.stMaxPrice},
+				#{stockHis.stMinPrice},
+				#{stockHis.stOpenPrice},
+				#{stockHis.stBeforePrice},
+				#{stockHis.stFlucPrice},
+				#{stockHis.stFlucRate},
+				#{stockHis.stChangeRate},
+				#{stockHis.stTradeVal},
+				#{stockHis.stTradePrice},
+				#{stockHis.stTotalVal},
+				#{stockHis.stCirculaVal})
+         </foreach>
+	</insert>
+</mapper>

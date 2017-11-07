@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dao.StockBasicDao">
+
+	<select id="findAllStockBasicId" resultType="java.lang.String">
+		select group_concat(stock_id) from stock_basic
+	</select>
+	
+	<select id="findAllBasic" resultType="cn.model.StockBasic">
+		select 
+			stock_id as stockId,
+			stock_name as stockName,
+			stock_create_time as stockCreateTime,
+			stock_block as stockBlock,
+			stock_exchange as stockExchange,
+			data_update_time as dataUpdateTime
+		from stock_basic 
+	</select>
+	
+	<insert id="saveStockBasics" parameterType="java.util.List">
+		insert into stock_basic(stock_id,stock_name,stock_create_time,stock_block,stock_exchange)
+		values
+		<foreach collection="list" item="stockBasic" index="index" separator=",">  
+				(#{stockBasic.stockId},#{stockBasic.stockName},#{stockBasic.stockCreateTime},#{stockBasic.stockBlock},#{stockBasic.stockExchange})
+         </foreach>
+	</insert>
+	
+	<update id="updateTimeById" parameterType="java.lang.String">
+		update stock_basic set data_update_time = #{1} where stock_id = #{0}
+	</update>
+	
+	<update id="updateNameById" parameterType="java.lang.String">
+		update stock_basic set stock_name = #{1} where stock_id = #{0}
+	</update>
+</mapper>
