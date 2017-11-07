@@ -1,0 +1,4 @@
+.pager{height:30px;line-height:30px;font-size: 12px;margin: 25px 0px;text-align: center;color: #2E6AB1;overflow: hidden;}
+.pager a{border:1px solid #9AAFE5;color:#2E6AB1;margin:0px 5px;padding:5px 8px;text-decoration: none;}
+.pager a.hover,.pager a.active{background-color:#2E6AB1;border-color:#000080;color:#FFF;}
+.pager a.disabled{color:#C8CDD2;cursor:auto;}

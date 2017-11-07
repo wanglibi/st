@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="css/index.css" />
+<link rel="stylesheet" href="css/jqueryPage.css" />
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jqueryPage.js"></script>
+</head>
+<body>
+	<div id="navfirst">
+		<ul id="menu">
+			<li id="b"><a href="#" title="浏览器脚本教程">浏览器脚本</a></li>
+			<li id="s"><a href="#" title="服务器脚本教程">服务器脚本</a></li>
+			<li id="d"><a href="#" title="ASP.NET 教程">ASP.NET 教程</a></li>
+			<li id="x"><a href="#" title="XML 系列教程">XML 系列教程</a></li>
+		</ul>
+	</div>
+	dd实时 Your browser does not support the video tag.
+	<button onclick="copyText()">Copy Text</button>
+	<p>
+		<button style="cursor: pointer" id="searchButton">查询</button>
+	</p>
+	</video>
+	<table id="tab-forecast" border="1">
+		<tr>
+			<th width="60px;">编号(id)</th>
+			<th>模块</th>
+			<th width="130px;">操作时间</th>
+			<th>操作人</th>
+			<th>操作地址</th>
+			<th>日志级别</th>
+			<th width='400px;'>操作内容</th>
+		</tr>
+		<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+	</table>
+	<div class="jqueryPage" id="jqueryPage"></div>
+	</br>
+</body>
+<script>
+	$(function() {
+		createPage(100);
+	});
+	
+	var total = 100;
+
+	$("#searchButton").click(function() {
+		search(1);
+		//重新设置分页
+		//$("#jqueryPage").html("");
+		//createPage(total);
+	});
+	
+	function search(pageNo){
+		alert(2);
+		$.ajax({
+			url:'/stockweb/searchForecast',
+       		type:'post',
+       		async: false,
+       	    dataType:"json",
+       	    data:{
+       	    	sDate:"",
+       	    	eDate:"",
+       	    	pageNo:pageNo,
+       	    	pageSize:10
+       	    },
+       	    success:function(json){
+       	    	$(".tab-forecast tr:gt(0)").remove();
+       	    	if(json != null && json.length > 0){
+       	    		//生成数据
+       	    		$.each(json,function(index,item){
+           	    		$(".tab-forecast").append("<tr>"
+						+"<td>"+item.stId+"</td>"
+						+"<td>"+item.stName+"</td>"
+						+"<td>"+item.fcDate+"</td>"
+						+"<td>"+item.stFlucRate+"</td>"
+						+"<td>"+item.weekFlucRate+"</td>"
+						+"<td>"+item.weekFlucFCST+"</td>"
+						+"<td>"+item.weekUpRate+"</td>"
+					    +"</tr>");
+           	    	});
+       	    		total = json[0].total;
+       	    		console.log(total);
+       	    	}else{
+       	    		$(".tab-journal").append("<tr><td colspan='7'>没查询到数据</td></tr>");
+       	    		total = 1;
+       	    	}
+       	    },
+       	 	error:function(data){
+     	 		window.location.href="index.html";
+	       	}
+		});
+	}
+</script>
+</html>
