@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dao.StockDataHisWeekDao">
+
+	<select id="findLastObj" resultType="cn.model.StockDataHisWeek">
+		select 
+			st_id as stId,
+			st_name as stName,
+			st_date as stDate,
+			st_no as stNo,
+			wk_no as wkNo,
+			fluc_rate_wk as flucRateWk,
+			fluc_rate_1 as flucRate1,
+			fluc_rate_2 as flucRate2,
+			fluc_rate_3 as flucRate3,
+			fluc_rate_4 as flucRate4,
+			fluc_rate_5 as flucRate5
+		from stock_data_his_week  
+		where st_id = #{0}
+		order by st_date desc
+		limit 1
+	</select>
+	
+	<update id="updateWeekObj" parameterType="cn.model.StockDataHisWeek">
+		update stock_data_his_week 
+		set st_date = #{stDate},
+		fluc_rate_wk = #{flucRateWk},
+		fluc_rate_1 = #{flucRate1},
+		fluc_rate_2 = #{flucRate2},
+		fluc_rate_3 = #{flucRate3},
+		fluc_rate_4 = #{flucRate4},
+		fluc_rate_5 = #{flucRate5}
+		where st_id = #{stId} and st_no = #{stNo}
+	</update>
+	
+	<insert id="saveWeekList" parameterType="java.util.List">
+		insert into
+		stock_data_his_week(st_id,st_name,st_date,st_month,st_no,wk_no,
+		fluc_rate_wk,
+		fluc_rate_1,
+		fluc_rate_2,
+		fluc_rate_3,
+		fluc_rate_4,
+		fluc_rate_5)
+		values
+		<foreach collection="list" item="weekData" index="index"
+			separator=",">
+			(#{weekData.stId},
+			#{weekData.stName},
+			#{weekData.stDate},
+			#{weekData.stMonth},
+			#{weekData.stNo},
+			#{weekData.wkNo},
+			#{weekData.flucRateWk},
+			#{weekData.flucRate1},
+			#{weekData.flucRate2},
+			#{weekData.flucRate3},
+			#{weekData.flucRate4},
+			#{weekData.flucRate5})
+		</foreach>
+	</insert>
+</mapper>

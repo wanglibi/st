@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dao.StockForecastDao">
+
+	<insert id="saveForecast" parameterType="cn.model.StockForecast">
+		insert into stock_forecast(st_id,st_name,fc_date,st_fluc_rate,week_fluc_rate,week_fluc_fcst,week_up_rate,week_up_fcst,lately_times,lately_times_rate,lately_times_fcst,fcst)
+		values(#{stId},
+			#{stName},
+			#{fcDate},
+			#{stFlucRate},
+			#{weekFlucRate},
+			#{weekFlucFCST},
+			#{weekUpRate},
+			#{weekUpFCST},
+			#{latelyTimes},
+			#{latelyTimesRate},
+			#{latelyTimesFCST},
+			#{fcst})
+	</insert>
+	
+	<insert id="saveList" parameterType="java.util.List">
+		insert into stock_forecast(st_id,st_name,fc_date,st_fluc_rate,week_fluc_rate,week_fluc_fcst,week_up_rate,week_up_fcst,lately_times,lately_times_rate,lately_times_fcst,fcst)
+		values
+		<foreach collection="list" item="fs" index="index" separator=",">
+			(#{fs.stId},
+			#{fs.stName},
+			#{fs.fcDate},
+			#{fs.stFlucRate},
+			#{fs.weekFlucRate},
+			#{fs.weekFlucFCST},
+			#{fs.weekUpRate},
+			#{fs.weekUpFCST},
+			#{fs.latelyTimes},
+			#{fs.latelyTimesRate},
+			#{fs.latelyTimesFCST},
+			#{fs.fcst})
+		</foreach>
+	</insert>
+</mapper>
