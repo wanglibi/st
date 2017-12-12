@@ -31,7 +31,7 @@ function findStock(url,data,div){
    	    	
    	    	$.each(json.datas,function(index,item){
    	    		xAxis[index] = item.stDate;
-   	    		series.data[index] = parseInt(item.stClosePrice);
+   	    		series.data[index] = item.stClosePrice;
    	    	});
    	    	
    	    	if(div.id == "stock"){
@@ -74,7 +74,7 @@ function showYear(stData,div){
 		}
 		if(legendData[i] = year){
 			//seriesData[y] = parseInt(item.stClosePrice);
-			series[i].data[y] = parseInt(item.stClosePrice);
+			series[i].data[y] = item.stClosePrice;
 			y++;
 		}
 	});
@@ -90,6 +90,8 @@ function showLine(div,xAxis,series,text,legendData){
 	// 指定图表的配置项和数据
 	var option = {
 	    title: {
+	    	top:25,
+	    	left:20,
 	        text: text
 	    },
 	    tooltip: {
