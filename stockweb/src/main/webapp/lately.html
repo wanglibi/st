@@ -10,28 +10,29 @@
 <script type="text/javascript" src="js/lately.js"></script>
 </head>
 <body >
-	<center>
+	<p>
 		<select id="stType">
 			<option id="day" value="1">日涨幅</option>
 			<option id="mon" value="2">年涨幅</option>
 		</select>
-		<div id="stock" style="width: 100%; height: 400px;"></div>
-		<div id="bigStock" style="width: 100%; height: 400px;"></div>
-	</center>
+	</p>
+	<div id="stock" style="width: 50%; height: 500px;float: left;"></div>
+	<div id="bigStock" style="width: 50%; height: 500px;float: right;"></div>
 </body>
 <script>
 $(function() {
-	showStock();
-	showBigStock();
+	showSt();
+	showBigSt();
 });
 
 $('#stType').change(function(){
 	var stType = $(this).children('option:selected').val();
 	if(stType == 1){
-		showStock();
-		showBigStock();
+		showSt();
+		showBigSt();
 	}else if(stType == 2){
-		showStockYear();
+		showStYear();
+		showBigStYear();
 	}
 });
 
