@@ -61,6 +61,15 @@ public class Util {
     }
     return false;
   }
+  
+  public static boolean isEmpty(Double o){
+    if(o == null)
+      return true;
+    if(o == 0){
+        return true;
+    }
+    return false;
+  }
 
   @SuppressWarnings(value = {"unchecked"})
   public static <T> T conver(Object object, Class<T> c) {

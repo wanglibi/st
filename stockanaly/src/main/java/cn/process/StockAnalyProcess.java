@@ -24,9 +24,9 @@ import cn.utils.Util;
  * @Description
  */
 @Component
-public class StockDataHisProcess implements BaseProcess {
+public class StockAnalyProcess implements BaseProcess {
 
-  private static final Logger logger = LoggerFactory.getLogger(StockDataHisProcess.class);
+  private static final Logger logger = LoggerFactory.getLogger(StockAnalyProcess.class);
 
   @Autowired
   private StockDataHisDao stockDataHisDao;
@@ -38,28 +38,26 @@ public class StockDataHisProcess implements BaseProcess {
   @Override
   public void job() {
     Long sDate = new Date().getTime();
-    List<String> ids = stockDataHisDao.findAllId();
+    List<String> ids = stockDataHisDao.findAlloneId();
     List<StockDataHisAnaly> saveList = new ArrayList<>();
     
     for (String id : ids) {
-      List<StockDataHis> stockList = stockDataHisDao.findHisById(id);
+      List<StockDataHis> stockList = stockDataHisDao.findHisByoneId(id);
       if (!Util.isEmpty(stockList)) {
         
-        int stCount = stockList.size();
-        String stId = stockList.get(stCount-1).getStId();
-        String stName = stockList.get(stCount-1).getStName();
-        String stDate = stockList.get(stCount-1).getStDate();
+        StockDataHis his = stockList.get(stockList.size()-1);
 
         StockDataHisAnaly analyData = new StockDataHisAnaly();
-        analyData.setStId(stId);
-        analyData.setStName(stName);
-        analyData.setSetDate(stDate);
-        analyData.setDays(stCount);
+        analyData.setStId(his.getStId());
+        analyData.setStName(his.getStName());
+        analyData.setSetDate(his.getStDate());
+        analyData.setDays(stockList.size());
         
         //计算涨跌
         countfluc(stockList, analyData);
+        
         saveList.add(analyData);
-        logger.info("analysis {} ...{}/{}",stId,saveList.size(),ids.size());
+        logger.info("analysis {} ...{}/{}",his.getStId(),saveList.size(),ids.size());
       }else{
         logger.info("[{} data is empty.]",id);
       }
@@ -73,7 +71,7 @@ public class StockDataHisProcess implements BaseProcess {
     }
     logger.info("save analy data end..consume:{} second",(new Date().getTime()-sDate)/1000);
   }
-
+  
   private void countfluc(List<StockDataHis> stockList, StockDataHisAnaly analyData) {
     int upTimes = 0,downTimes = 0,latelyTimes = 0;
     

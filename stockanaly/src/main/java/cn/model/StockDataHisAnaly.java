@@ -56,6 +56,7 @@ public class StockDataHisAnaly {
   //股票运营天数
   private int days;
 
+
   public int getDays() {
     return days;
   }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dao.StockLatelyDao">
+	
+	
+	<insert id="saveLatelyList" parameterType="java.util.List">
+		insert into
+		stock_lately(big_id,one_id,st_id,st_name,st_date,
+		st_price_fluc,
+		st_rate_fluc,
+		lately_times,
+		days,
+		price_than_before)
+		values
+		<foreach collection="list" item="lately" index="index"
+			separator=",">
+			(#{lately.bigId},
+			#{lately.oneId},
+			#{lately.stId},
+			#{lately.stName},
+			#{lately.stDate},
+			#{lately.stPriceFluc},
+			#{lately.stRateFluc},
+			#{lately.latelyTimes},
+			#{lately.days},
+			#{lately.priceThanBefore})
+		</foreach>
+	</insert>
+	
+	<delete id="truncateTable">
+		truncate table stock_lately
+	</delete>
+</mapper>

@@ -34,7 +34,7 @@ public class StockWeekProcess implements BaseProcess {
   @Override
   public void job() {
     Long sDate = new Date().getTime();
-    List<String> ids = stockDataHisDao.findAllId();
+    List<String> ids = stockDataHisDao.findAlloneId();
     List<StockDataHisWeek> saveList = new ArrayList<>();
     int num = 0;
 
@@ -45,7 +45,7 @@ public class StockWeekProcess implements BaseProcess {
 
       if (Util.isEmpty(lastWeek)) {
         // 全量查询
-        stockList = stockDataHisDao.findHisById(id);
+        stockList = stockDataHisDao.findHisByoneId(id);
       } else {
         // 增量量查询
         stockList = stockDataHisDao.findHisGreaterDate(id, lastWeek.getStDate());

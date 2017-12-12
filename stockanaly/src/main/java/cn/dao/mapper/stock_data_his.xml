@@ -3,12 +3,19 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.dao.StockDataHisDao">
 
-	<select id="findAllId" resultType="java.lang.String">
-		select stock_id from stock_basic
+	<select id="findAlloneId" resultType="java.lang.String">
+	select  concat(stock_exchange-1,stock_id) as stockId from stock_basic where stock_block is not null
+	</select>
+	
+	<select id="findBigStId" resultType="java.lang.String" parameterType="java.lang.String">
+		select distinct concat(b.stock_exchange-1,b.stock_id) from stock_basic a,stock_basic b 
+		where a.stock_id = #{0} and a.stock_block is not null
+		and a.stock_exchange = b.stock_exchange and b.stock_block is null
 	</select>
 
-	<select id="findHisById" resultType="cn.model.StockDataHis" parameterType="java.lang.String">
+	<select id="findHisByoneId" resultType="cn.model.StockDataHis" parameterType="java.lang.String">
 		select
+		one_id as oneId,
 		st_id as stId,
 		st_name as stName,
 		st_date as stDate,
@@ -24,7 +31,7 @@
 		st_trade_price as stTradePrice,
 		st_total_val as stTotalVal,
 		st_circula_val as stCirculaVal
-		from stock_data_his where st_id = #{0}
+		from stock_data_his where one_id = #{0}
 		group by st_date
 	</select>
 	
@@ -69,4 +76,24 @@
 		from stock_data_his where st_id = #{0} and st_date = #{1}
 	</select>
 	
+	<select id="findLatelyHis" resultType="cn.model.StockDataHis">
+		select
+		st_id as stId,
+		st_name as stName,
+		st_date as stDate,
+		st_close_price as stClosePrice,
+		st_max_price as stMaxPrice,
+		st_min_price as stMinPrice,
+		st_open_price as stOpenPrice,
+		st_before_price as stBeforePrice,
+		st_fluc_price as stFlucPrice,
+		st_fluc_rate as stFlucRate,
+		st_change_rate as stChangeRate,
+		st_trade_val as stTradeVal,
+		st_trade_price as stTradePrice,
+		st_total_val as stTotalVal,
+		st_circula_val as stCirculaVal
+		from stock_data_his
+		where st_date = (select max(st_date) from stock_data_his)
+	</select>
 </mapper>

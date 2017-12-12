@@ -45,7 +45,7 @@ public class StockForecastProcess implements BaseProcess {
   @Override
   public void job() {
     Long sDate = new Date().getTime();
-    List<String> ids = stockDataHisDao.findAllId();
+    List<String> ids = stockDataHisDao.findAlloneId();
     List<StockForecast> sfList = new ArrayList<>();
     int i =0;
     for (String id : ids) {
