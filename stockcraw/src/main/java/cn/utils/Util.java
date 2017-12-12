@@ -1,5 +1,6 @@
 package cn.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -107,5 +108,28 @@ public class Util {
     } catch (NumberFormatException e) {
       return 0;
     }
+  }
+  
+  public static Long parseLong(String s) {
+    if(s.contains("\\.")){
+      s = s.split("\\.")[0];
+    } 
+    try {
+      return Long.parseLong(s);
+    } catch (NumberFormatException e) {
+      return 0L;
+    }
+  }
+  
+  public static String coverCharset(String s,String charset){
+    if(isEmpty(s))
+      return s;
+    try {
+      s = new String(s.getBytes(charset),"ISO-8859-1");
+      s = new String(s.getBytes("ISO-8859-1"),charset);
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+    return s;
   }
 }

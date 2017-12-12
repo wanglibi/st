@@ -11,10 +11,11 @@
 	</select>
 	
 	<insert id="saveStockDataHis" parameterType="java.util.List">
-		insert into stock_data_his(st_id,st_name,st_date,st_close_price,st_max_price,st_min_price,st_open_price,st_before_price,st_fluc_price,st_fluc_rate,st_change_rate,st_trade_val,st_trade_price,st_total_val,st_circula_val)
+		insert into stock_data_his(one_id,st_id,st_name,st_date,st_close_price,st_max_price,st_min_price,st_open_price,st_before_price,st_fluc_price,st_fluc_rate,st_change_rate,st_trade_val,st_trade_price,st_total_val,st_circula_val)
 		values
 		<foreach collection="list" item="stockHis" index="index" separator=",">  
-				(#{stockHis.stId},
+				(#{stockHis.oneId},
+				#{stockHis.stId},
 				#{stockHis.stName},
 				#{stockHis.stDate},
 				#{stockHis.stClosePrice},

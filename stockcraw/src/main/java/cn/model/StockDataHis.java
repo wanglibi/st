@@ -3,6 +3,8 @@ package cn.model;
 public class StockDataHis {
   // 交易日期
   private String stDate;
+  //唯一编码
+  private String oneId;
   // 编码
   private String stId;
   // 名称
@@ -24,7 +26,7 @@ public class StockDataHis {
   // 换手率
   private Double stChangeRate;
   // 成交量
-  private int stTradeVal;
+  private Double stTradeVal;
   // 成交金额
   private Double stTradePrice;
   // 总市值
@@ -32,6 +34,12 @@ public class StockDataHis {
   // 流通市值
   private Double stCirculaVal;
 
+  public String getOneId() {
+    return oneId;
+  }
+  public void setOneId(String oneId) {
+    this.oneId = oneId;
+  }
   public String getStDate() {
     return stDate;
   }
@@ -98,10 +106,10 @@ public class StockDataHis {
   public void setStChangeRate(Double stChangeRate) {
     this.stChangeRate = stChangeRate;
   }
-  public int getStTradeVal() {
+  public Double getStTradeVal() {
     return stTradeVal;
   }
-  public void setStTradeVal(int stTradeVal) {
+  public void setStTradeVal(Double stTradeVal) {
     this.stTradeVal = stTradeVal;
   }
   public Double getStTradePrice() {

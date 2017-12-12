@@ -1,5 +1,6 @@
 package cn.process;
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import cn.dao.StockBasicDao;
 import cn.dao.StockDataHisDao;
+import cn.exception.NotStockException;
 import cn.model.StockBasic;
 import cn.model.StockDataHis;
 import cn.utils.Config;
@@ -62,20 +64,21 @@ public class StockDataHisProcess implements BaseProcess {
 
       String url = String.format(urlTemp, stock.getStockId(), startDay, lastDay);
       // 发送请求
-      String responseText = new String(HttpUtil.doGet(url, null, "GBk"));
+      String responseText = new String(HttpUtil.doGet(url, null, "GBK"));
+      responseText = Util.coverCharset(responseText, "utf-8");
       // 开多线程处理
       //isWait();
       //threadPool.execute(new StockThread(this, responseText));
       //不开多线程
-      job(responseText);
+      job(responseText,stock.getStockId());
       logger.info("download stockDatahis： {} from {} to {}.", stock.getStockId(), startDay, lastDay);
     }
   }
 
   @Override
-  public void job(Object responseText) {
+  public void job(Object responseText,String oneId) {
     if (Util.isEmpty(responseText)) return;
-    List<StockDataHis> stockDataHis = parseStockDataHis(responseText.toString());
+    List<StockDataHis> stockDataHis = parseStockDataHis(responseText.toString(),oneId);
     
     if (Util.isEmpty(stockDataHis)) return;
     stockDataHisDao.saveStockDataHis(stockDataHis);
@@ -85,7 +88,7 @@ public class StockDataHisProcess implements BaseProcess {
   /**
    * 解析
    */
-  public List<StockDataHis> parseStockDataHis(String stockText) {
+  public List<StockDataHis> parseStockDataHis(String stockText,String oneId) {
     List<StockDataHis> list = new ArrayList<>();
     String[] stock = stockText.replaceAll("\r|'", "").split("\n");
 
@@ -94,28 +97,53 @@ public class StockDataHisProcess implements BaseProcess {
       if (Util.isEmpty(stock[i]) || i == 0) continue;
       
       String[] s = stock[i].split(",");
-      if (s.length < 15) {
-        logger.error("[parseStockDataHis] error:" + stockText);
+      
+      if(s.length == 13){
+        StockDataHis stockDataHis = new StockDataHis();
+        stockDataHis.setOneId(oneId);
+        stockDataHis.setStDate(s[0]);
+        stockDataHis.setStId(s[1]);
+        stockDataHis.setStName(s[2]);
+        stockDataHis.setStClosePrice(Util.parseDouble(s[3]));
+        stockDataHis.setStMaxPrice(Util.parseDouble(s[4]));
+        stockDataHis.setStMinPrice(Util.parseDouble(s[5]));
+        stockDataHis.setStOpenPrice(Util.parseDouble(s[6]));
+        stockDataHis.setStBeforePrice(Util.parseDouble(s[7]));
+        stockDataHis.setStFlucPrice(Util.parseDouble(s[8]));
+        stockDataHis.setStFlucRate(Util.parseDouble(s[9]));
+        stockDataHis.setStChangeRate(Util.parseDouble(s[10]));
+        stockDataHis.setStTradeVal(Util.parseDouble(s[11]));
+        stockDataHis.setStTradePrice(Util.parseDouble(s[12]));
+//        stockDataHis.setStTotalVal(Util.parseDouble(s[13]));
+//        stockDataHis.setStCirculaVal(Util.parseDouble(s[14]));
+        list.add(stockDataHis);
+      }else if(s.length == 15){//个股
+        StockDataHis stockDataHis = new StockDataHis();
+        stockDataHis.setOneId(oneId);
+        stockDataHis.setStDate(s[0]);
+        stockDataHis.setStId(s[1]);
+        stockDataHis.setStName(s[2]);
+        stockDataHis.setStClosePrice(Util.parseDouble(s[3]));
+        stockDataHis.setStMaxPrice(Util.parseDouble(s[4]));
+        stockDataHis.setStMinPrice(Util.parseDouble(s[5]));
+        stockDataHis.setStOpenPrice(Util.parseDouble(s[6]));
+        stockDataHis.setStBeforePrice(Util.parseDouble(s[7]));
+        stockDataHis.setStFlucPrice(Util.parseDouble(s[8]));
+        stockDataHis.setStFlucRate(Util.parseDouble(s[9]));
+        stockDataHis.setStChangeRate(Util.parseDouble(s[10]));
+        stockDataHis.setStTradeVal(Util.parseDouble(s[11]));
+        stockDataHis.setStTradePrice(Util.parseDouble(s[12]));
+        stockDataHis.setStTotalVal(Util.parseDouble(s[13]));
+        stockDataHis.setStCirculaVal(Util.parseDouble(s[14]));
+        list.add(stockDataHis);
+      }else{
+        try{
+          throw new NotStockException("stock length is not 13 or 15 :"+stock[i]);
+        }catch(NotStockException e){
+          e.printStackTrace();
+        }
         continue;
       }
-
-      StockDataHis stockDataHis = new StockDataHis();
-      stockDataHis.setStDate(s[0]);
-      stockDataHis.setStId(s[1]);
-      stockDataHis.setStName(s[2]);
-      stockDataHis.setStClosePrice(Util.parseDouble(s[3]));
-      stockDataHis.setStMaxPrice(Util.parseDouble(s[4]));
-      stockDataHis.setStMinPrice(Util.parseDouble(s[5]));
-      stockDataHis.setStOpenPrice(Util.parseDouble(s[6]));
-      stockDataHis.setStBeforePrice(Util.parseDouble(s[7]));
-      stockDataHis.setStFlucPrice(Util.parseDouble(s[8]));
-      stockDataHis.setStFlucRate(Util.parseDouble(s[9]));
-      stockDataHis.setStChangeRate(Util.parseDouble(s[10]));
-      stockDataHis.setStTradeVal(Util.parseInt(s[11]));
-      stockDataHis.setStTradePrice(Util.parseDouble(s[12]));
-      stockDataHis.setStTotalVal(Util.parseDouble(s[13]));
-      stockDataHis.setStCirculaVal(Util.parseDouble(s[14]));
-      list.add(stockDataHis);
     }
     return list;
   }

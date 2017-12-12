@@ -15,7 +15,8 @@
 			stock_block as stockBlock,
 			stock_exchange as stockExchange,
 			data_update_time as dataUpdateTime
-		from stock_basic 
+		from stock_basic
+		where stock_block is not null
 	</select>
 	
 	<insert id="saveStockBasics" parameterType="java.util.List">
