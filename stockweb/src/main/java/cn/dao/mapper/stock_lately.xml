@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dao.StockLatelyDao">
+	
+	
+	<select id="findLatelyList" parameterType="cn.model.WebParam" resultType="cn.model.StockLately">
+		select 
+			one_id as oneId,
+			big_id as bigId,
+			st_id as stId,
+			st_name as stName,
+			st_date as stDate,
+			st_price_fluc as stPriceFluc,
+			st_rate_fluc as stRateFluc,
+			lately_times as latelyTimes,
+			days as days,
+			price_than_before as priceThanBefore
+		from stock_lately
+		where 1=1
+		<if test="stId != null and stId !=''" >  
+	        and st_id = #{stId}  
+	     </if>
+	     <if test="stName != null and stName !=''" >  
+	        and st_name = #{stName}  
+	     </if>
+		order by price_than_before desc
+		limit #{startNum},#{pageSize}
+	</select>
+	
+	<select id="countLately" parameterType="cn.model.WebParam" resultType="java.lang.Integer">
+		select  count(*) from stock_lately where 1=1
+		<if test="stId != null and stId !=''" >  
+	        and st_id = #{stId}  
+	     </if>
+	     <if test="stName != null and stName !=''" >  
+	        and st_name = #{stName}  
+	     </if>
+	</select>
+	
+	<select id="findStockHis" parameterType="cn.model.WebParam" resultType="cn.model.StockDataHis">
+		select
+		one_id as oneId,
+		st_id as stId,
+		st_name as stName,
+		st_date as stDate,
+		st_close_price as stClosePrice,
+		st_max_price as stMaxPrice,
+		st_min_price as stMinPrice,
+		st_open_price as stOpenPrice,
+		st_before_price as stBeforePrice,
+		st_fluc_price as stFlucPrice,
+		st_fluc_rate as stFlucRate,
+		st_change_rate as stChangeRate,
+		st_trade_val as stTradeVal,
+		st_trade_price as stTradePrice,
+		st_total_val as stTotalVal,
+		st_circula_val as stCirculaVal,
+		st_circula_val/st_open_price*st_fluc_price as priceThanBefore
+		from stock_data_his
+		where one_id = #{oneId}
+		order by st_date
+	</select>
+	
+	<select id="findBigStHis" parameterType="cn.model.WebParam" resultType="cn.model.StockDataHis">
+		select
+			c.one_id as oneId,
+			c.st_id as stId,
+			c.st_name as stName,
+			c.st_date as stDate,
+			c.st_close_price as stClosePrice,
+			c.st_max_price as stMaxPrice,
+			c.st_min_price as stMinPrice,
+			c.st_open_price as stOpenPrice,
+			c.st_before_price as stBeforePrice,
+			c.st_fluc_price as stFlucPrice,
+			c.st_fluc_rate as stFlucRate,
+			c.st_change_rate as stChangeRate,
+			c.st_trade_val as stTradeVal,
+			c.st_trade_price as stTradePrice,
+			c.st_total_val as stTotalVal,
+			c.st_circula_val as stCirculaVal
+		from stock_data_his c,
+			(select min(st_date) sDate,max(st_date) eDate from  stock_data_his where one_id = #{oneId}) b
+		where c.one_id = #{bigId}
+			and c.st_date BETWEEN b.sDate and b.eDate
+		order by c.st_date
+	</select>
+</mapper>

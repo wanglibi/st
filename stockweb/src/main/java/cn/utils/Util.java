@@ -1,8 +1,11 @@
 package cn.utils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import cn.model.WebParam;
 
 public class Util {
   
@@ -141,5 +144,18 @@ public class Util {
   //首字母大写
   public static String upFirstChar(String name) {
     return name.substring(0, 1).toUpperCase() + name.substring(1);
+  }
+  
+  public static void main(String[] args) {
+    List<String> s1 = new ArrayList<>();
+    List<String> s2 = new ArrayList<>();
+    s1.add("1");s1.add("2");
+    s2.add("3");s2.add("4");
+    WebParam p = new WebParam();
+    
+    List s3 = new ArrayList();
+    s3.add(s1);s3.add(s2);
+    p.setDatas(s3);
+    System.err.println(JsonUtil.toJson(s3));
   }
 }

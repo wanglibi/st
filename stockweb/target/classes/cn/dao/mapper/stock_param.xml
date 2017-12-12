@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.dao.StockParamDao">
-	<select id="findAllParam" resultType="cn.model.StockParam">
-		select k_name as kname, k_value as kvalue, k_desc as kdesc,k_group as kgroup,k_order as korder 
-		from stock_param order by k_group,k_order
-	</select>
-</mapper>

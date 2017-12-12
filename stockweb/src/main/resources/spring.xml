@@ -20,6 +20,4 @@ http://www.springframework.org/schema/task/spring-task-4.0.xsd">
 
 	<import resource="spring-mybaits.xml" />
 
-	<!-- <import resource="spring-schedule.xml" /> -->
-
 </beans>

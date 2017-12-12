@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="css/index.css" />
+<script type="text/javascript" src="lib/jquery.min.js"></script>
+<script type="text/javascript" src="lib/echarts.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/lately.js"></script>
+</head>
+<body >
+	<center>
+		<select id="stType">
+			<option id="day" value="1">日涨幅</option>
+			<option id="mon" value="2">年涨幅</option>
+		</select>
+		<div id="stock" style="width: 100%; height: 400px;"></div>
+		<div id="bigStock" style="width: 100%; height: 400px;"></div>
+	</center>
+</body>
+<script>
+$(function() {
+	showStock();
+	showBigStock();
+});
+
+$('#stType').change(function(){
+	var stType = $(this).children('option:selected').val();
+	if(stType == 1){
+		showStock();
+		showBigStock();
+	}else if(stType == 2){
+		showStockYear();
+	}
+});
+
+</script>
+</html>

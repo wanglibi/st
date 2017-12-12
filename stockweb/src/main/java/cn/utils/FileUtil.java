@@ -47,7 +47,7 @@ public class FileUtil {
   
   private static List<String> readFile(File file, String charset) {
     List<String> list = null;
-    charset = charset == null ? charset : "UTF-8";
+    charset = charset == null ? "UTF-8":charset;
     try {
       br = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
       list = new ArrayList<>();

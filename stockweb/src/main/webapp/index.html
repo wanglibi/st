@@ -5,93 +5,80 @@
 <meta charset="utf-8">
 <link rel="stylesheet" type="text/css" href="css/index.css" />
 <link rel="stylesheet" href="css/jqueryPage.css" />
+<script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/jqueryPage.js"></script>
+<script type="text/javascript" src="lib/jquery.min.js"></script>
+<script type="text/javascript" src="lib/jqueryPage.js"></script>
+<style type="text/css">
+
+</style>
 </head>
-<body>
-	<div id="navfirst">
-		<ul id="menu">
-			<li id="b"><a href="#" title="浏览器脚本教程">浏览器脚本</a></li>
-			<li id="s"><a href="#" title="服务器脚本教程">服务器脚本</a></li>
-			<li id="d"><a href="#" title="ASP.NET 教程">ASP.NET 教程</a></li>
-			<li id="x"><a href="#" title="XML 系列教程">XML 系列教程</a></li>
-		</ul>
-	</div>
-	dd实时 Your browser does not support the video tag.
-	<button onclick="copyText()">Copy Text</button>
-	<p>
-		<button style="cursor: pointer" id="searchButton">查询</button>
+<body style="text-align: center;">
+	<p> 编号:<input type="text" id="stId"/> 
+		名称:<input type="text" id="stName"/>
+		<button style="cursor: pointer" id="searchButton" onclick="searchAllStock()">查询</button>
 	</p>
-	</video>
-	<table id="tab-forecast" border="1">
+	<table class="tab-lately" border="1" align="center" >
 		<tr>
-			<th width="60px;">编号(id)</th>
-			<th>模块</th>
-			<th width="130px;">操作时间</th>
-			<th>操作人</th>
-			<th>操作地址</th>
-			<th>日志级别</th>
-			<th width='400px;'>操作内容</th>
+			<th width="60px;">编号</th>
+			<th>名称</th>
+			<th width="130px;">日期</th>
+			<th>每股累计涨跌</th>
+			<th>每股累计涨幅</th>
+			<th>连续涨跌次数</th>
+			<th>开盘天数</th>
+			<th>当日涨跌额</th>
 		</tr>
-		<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 	</table>
 	<div class="jqueryPage" id="jqueryPage"></div>
-	</br>
 </body>
 <script>
 	$(function() {
-		createPage(100);
+		searchAllStock();
 	});
 	
-	var total = 100;
-
-	$("#searchButton").click(function() {
-		search(1);
-		//重新设置分页
-		//$("#jqueryPage").html("");
-		//createPage(total);
-	});
-	
-	function search(pageNo){
-		alert(2);
+	function searchAllStock(pageNum){
+		if(pageNum == 'undefined' || pageNum == null){
+			pageNum = 1;
+		}
 		$.ajax({
-			url:'/stockweb/searchForecast',
+			url:'/stockweb/searchAllStock',
        		type:'post',
-       		async: false,
+       		//async: true,异步  默认值
        	    dataType:"json",
        	    data:{
-       	    	sDate:"",
-       	    	eDate:"",
-       	    	pageNo:pageNo,
-       	    	pageSize:10
+       	    	stId:$("#stId").val(),
+       	    	stName:$("#stName").val(),
+       	    	pageNum:pageNum
        	    },
        	    success:function(json){
-       	    	$(".tab-forecast tr:gt(0)").remove();
-       	    	if(json != null && json.length > 0){
+       	    	$(".tab-lately tr:gt(0)").remove();
+       	    	if(json != null && json.datas.length > 0){
        	    		//生成数据
-       	    		$.each(json,function(index,item){
-           	    		$(".tab-forecast").append("<tr>"
+       	    		$.each(json.datas,function(index,item){
+           	    		$(".tab-lately").append("<tr onclick=\"latelyInfo('"+item.oneId+"','"+item.bigId+"')\">"
 						+"<td>"+item.stId+"</td>"
 						+"<td>"+item.stName+"</td>"
-						+"<td>"+item.fcDate+"</td>"
-						+"<td>"+item.stFlucRate+"</td>"
-						+"<td>"+item.weekFlucRate+"</td>"
-						+"<td>"+item.weekFlucFCST+"</td>"
-						+"<td>"+item.weekUpRate+"</td>"
+						+"<td>"+item.stDate+"</td>"
+						+"<td>"+item.stPriceFluc+"元</td>"
+						+"<td>"+parseInt(item.stRateFluc)+"%</td>"
+						+"<td>"+item.latelyTimes+"</td>"
+						+"<td>"+item.days+"</td>"
+						+"<td>"+converMoney(item.priceThanBefore)+"</td>"
 					    +"</tr>");
            	    	});
-       	    		total = json[0].total;
-       	    		console.log(total);
        	    	}else{
-       	    		$(".tab-journal").append("<tr><td colspan='7'>没查询到数据</td></tr>");
-       	    		total = 1;
+       	    		$(".tab-lately").append("<tr><td colspan='8'>没查询到数据</td></tr>");
        	    	}
+       			createPage(json.pageTotal,pageNum,json.pageSize);
        	    },
        	 	error:function(data){
-     	 		window.location.href="index.html";
+       	 		createPage(1,1,1);
+       	 		console.log(data);
 	       	}
 		});
 	}
+	
+	
 </script>
 </html>

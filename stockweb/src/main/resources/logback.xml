@@ -42,7 +42,7 @@
 		<appender-ref ref="file—error" />
 	</root>
 	
-	<!-- <logger name="cn" level="DEBUG" />
-	<logger name="org.apache.mybatis" level="DEBUG" /> -->
+	<logger name="cn" level="DEBUG" />
+	<logger name="org.apache.mybatis" level="DEBUG" />
 
 </configuration>

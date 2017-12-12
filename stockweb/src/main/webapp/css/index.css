@@ -3,6 +3,8 @@ body {
     font-size: 14px;
 }
 
+.tab-lately td{cursor: pointer;}
+
 div#navfirst {
     height: 148px;
     width: 1210px;
