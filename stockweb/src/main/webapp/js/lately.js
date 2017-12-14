@@ -39,7 +39,8 @@ function findStock(url,data,div){
    	    	}else{
    	    		bigStockData = json.datas;
    	    	}
-   	    	showLine(div,xAxis,series,json.datas[0].stName,legendData);
+   	    	var legend = {data:legendData};
+   	    	showLine(div,xAxis,series,json.datas[0].stName,legend);
    	    },
    	 	error:function(data){
    	 		console.log(data);
@@ -54,6 +55,7 @@ function showYear(stData,div){
 	} 
 	var xAxis = [];
 	var legendData = [];
+	var legendSelect = {};
 	var series = [];
 	var seriesData = [];
 	var i = -1,x = 0;y = 0;
@@ -66,23 +68,31 @@ function showYear(stData,div){
 			series[i].name= year;
 			series[i].type='line';
 			series[i].data = new Array();
+			
+			if(year == new Date().getFullYear()){
+				legendSelect[year]=true;
+			}else{
+				legendSelect[year]=false;
+			}
 		}
 		
 		if(legendData[0] == year){
 			xAxis[x] = item.stDate.substr(5,9);
 			x++;
 		}
+		
+		
 		if(legendData[i] = year){
-			//seriesData[y] = parseInt(item.stClosePrice);
 			series[i].data[y] = item.stClosePrice;
 			y++;
 		}
 	});
-	showLine(div,xAxis,series,stData[0].stName,legendData);
+	var legend = {data:legendData,selected:legendSelect};
+	showLine(div,xAxis,series,stData[0].stName,legend);
 }
 
 
-function showLine(div,xAxis,series,text,legendData){
+function showLine(div,xAxis,series,text,legend){
 	if(!xAxis || !series)
 		return;
 	
@@ -98,9 +108,7 @@ function showLine(div,xAxis,series,text,legendData){
 	    	type : 'shadow',
 	    	formatter: "{c}"
 	    },
-	    legend: {
-	        data:legendData
-	    },
+	    legend: legend,
 	    xAxis: {
 	    	
 	        data: xAxis,
@@ -120,5 +128,5 @@ function showLine(div,xAxis,series,text,legendData){
             end: 100
         }]
 	};
-	myChart.setOption(option);
+	myChart.setOption(option,true);
 }
